@@ -1,0 +1,11 @@
+.DS_Store
+bin
+test-bin
+build
+*.iml
+.idea
+*.project
+*.classpath
+target
+.settings
+dependency-reduced-pom.xml
