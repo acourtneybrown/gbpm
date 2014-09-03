@@ -111,6 +111,12 @@
     </dependency>
 
     <dependency>
+      <groupId>com.echonest</groupId>
+      <artifactId>jEN</artifactId>
+      <version>4.x.t</version>
+    </dependency>
+
+    <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
       <version>4.11</version>

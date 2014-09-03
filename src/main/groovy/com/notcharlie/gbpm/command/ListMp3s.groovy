@@ -8,7 +8,7 @@ import groovy.util.logging.Slf4j
 @Slf4j
 @Parameters(commandNames = 'list-mp3s')
 class ListMp3s extends ListFiles {
-  ListMp3s() {
-    super('.mp3')
+  ListMp3s(List<File> files = []) {
+    super('.mp3', files)
   }
 }

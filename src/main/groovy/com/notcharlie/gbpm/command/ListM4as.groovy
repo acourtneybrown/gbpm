@@ -8,7 +8,7 @@ import groovy.util.logging.Slf4j
 @Slf4j
 @Parameters(commandNames = 'list-m4as')
 class ListM4as extends ListFiles {
-  ListM4as() {
-    super('.m4a')
+  ListM4as(List<File> files = []) {
+    super('.m4a', files)
   }
 }
