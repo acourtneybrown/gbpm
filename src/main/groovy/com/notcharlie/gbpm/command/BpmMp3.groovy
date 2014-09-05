@@ -49,7 +49,11 @@ class BpmMp3 implements Command {
       mp3file.id3v2Tag.BPM = bestMatch.tempo as Integer
       final outputPath = Paths.get(outputDir, file)
       Files.createDirectories(outputPath.parent)
-      mp3file.save(outputPath.toString())
+      if (outputPath.toFile().exists()) {
+        log.warn("Output file ${outputPath} already exists.  Skipping")
+      } else {
+        mp3file.save(outputPath.toString())
+      }
     } else {
       log.warn "no matching song for ${mp3file.id3v2Tag.artist} / ${mp3file.id3v2Tag.title} @ ${file}"
     }
