@@ -34,11 +34,24 @@ class Main {
     final command = jc.commands[jc.parsedCommand].objects[0] as Command
     if (command) {
       final props = new Properties()
-      props.load(params.tenProperties.newReader())
+      props.load(tenProperties(params))
       final en = new EchoNestAPI(props['api.key'] as String)
       command.run(en)
     } else {
       log.error('unable to execute parsed command {}', jc.parsedCommand)
     }
+  }
+
+  private static Reader tenProperties(MainParameters params) {
+    final pwdFile = new File('ten.properties')
+    final homeFile = new File(System.getProperty('user.home'), 'ten.properties')
+    if (params.tenProperties.exists()) {
+      return params.tenProperties.newReader()
+    } else if (pwdFile.exists()) {
+      return pwdFile.newReader()
+    } else if (homeFile.exists()) {
+      return homeFile.newReader()
+    }
+    throw new IllegalStateException('Unable to locate a "ten.properties" file')
   }
 }
