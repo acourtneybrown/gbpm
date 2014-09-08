@@ -2,6 +2,7 @@ package com.notcharlie.gbpm.command
 
 import static com.google.common.base.Preconditions.checkNotNull
 
+import com.mpatric.mp3agic.ID3v24Tag
 import com.notcharlie.gbpm.command.BpmFile.FileHandler
 
 import com.beust.jcommander.Parameters
@@ -10,7 +11,7 @@ import groovy.transform.CompileStatic
 import groovy.transform.ToString
 import groovy.util.logging.Slf4j
 
-@CompileStatic
+//@CompileStatic
 @Parameters(commandNames = 'bpm-mp3')
 @Slf4j
 @ToString
@@ -25,12 +26,12 @@ class BpmMp3 extends BpmFile {
 
       @Override
       String getArtist() {
-        return mp3File.id3v2Tag.artist
+        return mp3File.id3v2Tag?.artist ?: mp3File.id3v1Tag?.artist
       }
 
       @Override
       String getTitle() {
-        return mp3File.id3v2Tag.title
+        return mp3File.id3v2Tag?.title ?: mp3File.id3v1Tag?.title
       }
 
       @Override
@@ -40,6 +41,9 @@ class BpmMp3 extends BpmFile {
 
       @Override
       void setBpm(int bpm) {
+        if (!mp3File.id3v2Tag) {
+          mp3File.id3v2Tag = new ID3v24Tag()
+        }
         mp3File.id3v2Tag.BPM = bpm
       }
 

@@ -7,7 +7,7 @@ import com.mpatric.mp3agic.Mp3File
 import com.notcharlie.gbpm.validator.IsFile
 import groovy.transform.CompileStatic
 
-@CompileStatic
+//@CompileStatic
 @Parameters(commandNames = 'print-id3')
 class PrintId3Info implements Command {
   @Parameter(description = 'files', validateWith = IsFile)
@@ -23,9 +23,11 @@ class PrintId3Info implements Command {
       System.out.println("Has ID3v1 tag?: " + (mp3file.hasId3v1Tag() ? "YES" : "NO"))
       System.out.println("Has ID3v2 tag?: " + (mp3file.hasId3v2Tag() ? "YES" : "NO"))
       System.out.println("Has custom tag?: " + (mp3file.hasCustomTag() ? "YES" : "NO"))
-      System.out.println("Artist: ${mp3file.id3v2Tag.artist}")
-      System.out.println("Title: ${mp3file.id3v2Tag.title}")
-      System.out.println("BPM: ${mp3file.id3v2Tag.getBPM()}")
+      System.out.println("Artist (ID3v1): ${mp3file.id3v1Tag?.artist}")
+      System.out.println("Title (ID3v1): ${mp3file.id3v1Tag?.title}")
+      System.out.println("Artist (ID3v2): ${mp3file.id3v2Tag?.artist}")
+      System.out.println("Title (ID3v2): ${mp3file.id3v2Tag?.title}")
+      System.out.println("BPM (ID3v2): ${mp3file.id3v2Tag?.getBPM()}")
     }
   }
 }
