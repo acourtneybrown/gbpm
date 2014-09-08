@@ -1,61 +1,61 @@
 package com.notcharlie.gbpm.command
 
-import com.beust.jcommander.Parameter
+import static com.google.common.base.Preconditions.checkNotNull
+
+import com.notcharlie.gbpm.command.BpmFile.FileHandler
+
 import com.beust.jcommander.Parameters
-import com.echonest.api.v4.EchoNestAPI
-import com.echonest.api.v4.Song
-import com.echonest.api.v4.SongParams
 import com.mpatric.mp3agic.Mp3File
-import com.notcharlie.gbpm.validator.IsFile
 import groovy.transform.CompileStatic
 import groovy.transform.ToString
 import groovy.util.logging.Slf4j
-
-import java.nio.file.Files
-import java.nio.file.Paths
 
 @CompileStatic
 @Parameters(commandNames = 'bpm-mp3')
 @Slf4j
 @ToString
-class BpmMp3 implements Command {
-  @Parameter(names = ['--output', '-o'], description = 'Directory to place mp3 file with updated tags, with paths matching the original mp3 file')
-  private String outputDir = 'out'
+class BpmMp3 extends BpmFile {
+  private static class Mp3FileHandler implements FileHandler {
+    static class Mp3MediaFile implements FileHandler.MediaFile {
+      private final Mp3File mp3File
 
-  @Parameter(description = 'file', validateWith = IsFile)
-  private String file
+      Mp3MediaFile(Mp3File mp3File) {
+        this.mp3File = checkNotNull(mp3File)
+      }
 
-  @Override
-  void run(EchoNestAPI en) {
-    log.info("running ${this.class} for file ${file} -> ${outputDir}")
-    final mp3file = new Mp3File(file)
-    final p = new SongParams()
-    p.artist = mp3file.id3v2Tag.artist
-    p.title = mp3file.id3v2Tag.title
-    p.includeAudioSummary()
-    final songs = en.searchSongs(p)
-    Song bestMatch = null
-    def currDelta = Double.MAX_VALUE
-    songs.each { Song song ->
-      log.trace "checking ${song}"
-      if ((Math.abs(song.duration - mp3file.lengthInSeconds) / mp3file.lengthInSeconds) < currDelta) {
-        bestMatch = song
-        log.trace "new best match"
+      @Override
+      String getArtist() {
+        return mp3File.id3v2Tag.artist
+      }
+
+      @Override
+      String getTitle() {
+        return mp3File.id3v2Tag.title
+      }
+
+      @Override
+      int getLengthInSeconds() {
+        return mp3File.lengthInSeconds
+      }
+
+      @Override
+      void setBpm(int bpm) {
+        mp3File.id3v2Tag.BPM = bpm
+      }
+
+      @Override
+      void save(String filename) {
+        mp3File.save(filename)
       }
     }
 
-    if (bestMatch) {
-      log.trace "best match ${bestMatch}"
-      mp3file.id3v2Tag.BPM = bestMatch.tempo as Integer
-      final outputPath = Paths.get(outputDir, file)
-      Files.createDirectories(outputPath.parent)
-      if (outputPath.toFile().exists()) {
-        log.warn("Output file ${outputPath} already exists.  Skipping")
-      } else {
-        mp3file.save(outputPath.toString())
-      }
-    } else {
-      log.warn "no matching song for ${mp3file.id3v2Tag.artist} / ${mp3file.id3v2Tag.title} @ ${file}"
+    @Override
+    FileHandler.MediaFile load(String filename) {
+      return new Mp3MediaFile(new Mp3File(filename))
     }
+  }
+
+  BpmMp3(String file = null, String outputDir = null) {
+    super(new Mp3FileHandler(), file, outputDir)
   }
 }

@@ -18,7 +18,7 @@ import java.util.concurrent.TimeUnit
 @Slf4j
 class BpmDirectory implements Command {
   @Parameter(names = ['--output', '-o'], description = 'Directory to place mp3 file with updated tags, with paths matching the original mp3 file')
-  private String outputDir = 'out'
+  private String outputDir = 'output'
 
   @Parameter(names = ['--delay', '-d'], description = 'Delay (in milliseconds between calls to the Echo Nest')
   private long delayInMillis = 3500
@@ -34,8 +34,8 @@ class BpmDirectory implements Command {
     final m4as = listM4as()
     log.debug('list of files to tag with bpm {}, {}', mp3s, m4as)
     final commandQueue = Queues.newConcurrentLinkedQueue()
-    commandQueue.addAll(mp3s.collect { String file -> new BpmMp3(file: file, outputDir: outputDir) })
-    commandQueue.addAll(m4as.collect { String file -> new BpmM4a(file: file, outputDir: outputDir) })
+    commandQueue.addAll(mp3s.collect { String file -> new BpmMp3(file, outputDir) })
+    commandQueue.addAll(m4as.collect { String file -> new BpmM4a(file, outputDir) })
 
     final future = executorService.scheduleAtFixedRate({ ->
       def command = null
