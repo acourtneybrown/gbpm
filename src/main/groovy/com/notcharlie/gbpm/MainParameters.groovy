@@ -10,6 +10,6 @@ class MainParameters {
   @Parameter(names = '--help', help = true)
   boolean help
 
-  @Parameter(names = '', description = 'Location of the properties file with The Echo Nest keys', converter = FileConverter, validateWith = IsFile)
+  @Parameter(names = ['--ten', '-t'], description = 'Location of the properties file with The Echo Nest keys', converter = FileConverter, validateWith = IsFile)
   File tenProperties = new File('ten.properties')
 }
