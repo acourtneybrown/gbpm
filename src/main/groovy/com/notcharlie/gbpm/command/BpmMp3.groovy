@@ -49,7 +49,7 @@ class BpmMp3 extends BpmFile {
 
       @Override
       int getBpm() {
-        return mp3File?.id3v2Tag?.BPM
+        return mp3File?.id3v2Tag?.BPM ?: 0
       }
 
       @Override
