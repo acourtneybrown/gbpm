@@ -63,6 +63,12 @@ class BpmM4a extends BpmFile {
       }
 
       @Override
+      int getBpm() {
+        final tempo = appleItem.getBoxes(AppleTempoBox).head()
+        return tempo?.value as Integer ?: 0
+      }
+
+      @Override
       void save(String filename) {
         final fc = new FileOutputStream(new File(filename)).getChannel()
         isoFile.writeContainer(fc)

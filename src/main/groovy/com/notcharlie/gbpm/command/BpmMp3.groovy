@@ -48,6 +48,11 @@ class BpmMp3 extends BpmFile {
       }
 
       @Override
+      int getBpm() {
+        return mp3File?.id3v2Tag?.BPM
+      }
+
+      @Override
       void save(String filename) {
         mp3File.save(filename)
       }

@@ -24,6 +24,7 @@ abstract class BpmFile implements Command {
       String getTitle()
       int getLengthInSeconds()
       void setBpm(int bpm)
+      int getBpm()
       void save(String filename)
     }
 
@@ -48,6 +49,11 @@ abstract class BpmFile implements Command {
   void run(EchoNestAPI en) {
     log.info("running ${this.class} for file ${file} -> ${outputDir}")
     final mediaFile = handler.load(file)
+    if (mediaFile.getBpm() != 0) {
+      log.info("$file already has BPM info... skipping")
+      return
+    }
+
     final p = new SongParams()
     p.artist = mediaFile.artist
     p.title = mediaFile.title
