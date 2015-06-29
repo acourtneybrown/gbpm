@@ -3,6 +3,7 @@ package com.notcharlie.gbpm.command
 import com.beust.jcommander.Parameter
 import com.beust.jcommander.Parameters
 import com.echonest.api.v4.EchoNestAPI
+import com.notcharlie.gbpm.filehandler.FileHandler
 import com.notcharlie.gbpm.filehandler.M4aFileHandler
 import com.notcharlie.gbpm.filehandler.Mp3FileHandler
 import com.notcharlie.gbpm.validator.IsFile
@@ -19,7 +20,7 @@ import java.nio.file.Paths
 class SetBpm implements Command {
   private static final Mp3FileHandler MP3_FILE_HANDLER = new Mp3FileHandler()
   static private M4aFileHandler M4A_FILE_HANDLER = new M4aFileHandler()
-  private static final Map<String, Closure<BpmFile.FileHandler.MediaFile>> MAKE_MEDIA_FILE = [
+  private static final Map<String, Closure<FileHandler.MediaFile>> MAKE_MEDIA_FILE = [
       mp3: { String filename -> MP3_FILE_HANDLER.load(filename) },
       m4a: { String filename -> M4A_FILE_HANDLER.load(filename) }
   ]
@@ -41,7 +42,7 @@ class SetBpm implements Command {
     final filename = filenames.head()
     final extension = FilenameUtils.getExtension(filename)?.toLowerCase()
     if (MAKE_MEDIA_FILE.containsKey(extension)) {
-      final mediaFile = MAKE_MEDIA_FILE[extension](filename) as BpmFile.FileHandler.MediaFile
+      final mediaFile = MAKE_MEDIA_FILE[extension](filename) as FileHandler.MediaFile
       mediaFile.bpm = bpm
 
       // TODO: refactor to share with BpmFile

@@ -10,12 +10,11 @@ import com.coremedia.iso.boxes.apple.AppleItemListBox
 import com.googlecode.mp4parser.boxes.apple.AppleArtistBox
 import com.googlecode.mp4parser.boxes.apple.AppleNameBox
 import com.googlecode.mp4parser.boxes.apple.AppleTempoBox
-import com.notcharlie.gbpm.command.BpmFile
 import groovy.transform.CompileStatic
 
 @CompileStatic
-class M4aFileHandler implements BpmFile.FileHandler {
-  static class M4aMediaFile implements BpmFile.FileHandler.MediaFile {
+class M4aFileHandler implements FileHandler {
+  static class M4aMediaFile implements FileHandler.MediaFile {
     final IsoFile isoFile
     final AppleItemListBox appleItem
 
@@ -69,7 +68,7 @@ class M4aFileHandler implements BpmFile.FileHandler {
   }
 
   @Override
-  BpmFile.FileHandler.MediaFile load(String filename) {
+  FileHandler.MediaFile load(String filename) {
     return new M4aMediaFile(new IsoFile(filename))
   }
 }

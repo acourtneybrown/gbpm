@@ -6,6 +6,7 @@ import com.beust.jcommander.Parameter
 import com.echonest.api.v4.EchoNestAPI
 import com.echonest.api.v4.Song
 import com.echonest.api.v4.SongParams
+import com.notcharlie.gbpm.filehandler.FileHandler
 import com.notcharlie.gbpm.validator.IsFile
 import groovy.transform.CompileStatic
 import groovy.transform.ToString
@@ -18,19 +19,6 @@ import java.nio.file.Paths
 @Slf4j
 @ToString
 abstract class BpmFile implements Command {
-  static interface FileHandler {
-    interface MediaFile {
-      String getArtist()
-      String getTitle()
-      int getLengthInSeconds()
-      void setBpm(int bpm)
-      int getBpm()
-      void save(String filename)
-    }
-
-    MediaFile load(String filename)
-  }
-
   @Parameter(names = ['--output', '-o'], description = 'Directory to place mp3 file with updated tags, with paths matching the original mp3 file')
   private String outputDir = 'output'
 

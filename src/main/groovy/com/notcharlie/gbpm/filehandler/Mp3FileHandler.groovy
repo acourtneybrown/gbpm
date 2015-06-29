@@ -4,12 +4,11 @@ import static com.google.common.base.Preconditions.checkNotNull
 
 import com.mpatric.mp3agic.ID3v24Tag
 import com.mpatric.mp3agic.Mp3File
-import com.notcharlie.gbpm.command.BpmFile
 import groovy.transform.CompileStatic
 
 @CompileStatic
-class Mp3FileHandler implements BpmFile.FileHandler {
-  static class Mp3MediaFile implements BpmFile.FileHandler.MediaFile {
+class Mp3FileHandler implements FileHandler {
+  static class Mp3MediaFile implements FileHandler.MediaFile {
     private final Mp3File mp3File
 
     Mp3MediaFile(Mp3File mp3File) {
@@ -51,7 +50,7 @@ class Mp3FileHandler implements BpmFile.FileHandler {
   }
 
   @Override
-  BpmFile.FileHandler.MediaFile load(String filename) {
+  FileHandler.MediaFile load(String filename) {
     return new Mp3MediaFile(new Mp3File(filename))
   }
 }
